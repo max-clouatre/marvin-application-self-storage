@@ -95,6 +95,7 @@ todo_app.say("I need to go to the store tomorrow afternoon", thread=thread)
 # step 5: Load the thread to view the metadata
 thread_with_metadata = Thread(id=thread.id).load()
 print("--Thread metadata--", thread_with_metadata.metadata)
+# --Thread metadata-- {'todos': '["{\\"description\\":\\"Go to the store\\",\\"due\\":\\"2024-03-20T12:00:00Z\\",\\"done\\":false}"]'}
 
 #  Finish one
 todo_app.say("I went to the store", thread=thread)
@@ -108,4 +109,5 @@ pprint_messages(thread.get_messages())
 # load the thread to view the metadata again
 thread_with_metadata = Thread(id=thread.id).load()
 print("--Thread metadata--", thread_with_metadata.metadata)
+# --Thread metadata-- {'todos': '["{\\"description\\":\\"Go to the store\\",\\"due\\":\\"2024-03-20T12:00:00Z\\",\\"done\\":true}"]'}
 ```
