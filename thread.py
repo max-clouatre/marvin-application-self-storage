@@ -23,6 +23,7 @@ class Thread(MarvinThread):
         """
         Updates a thread.
         """
+        print(f'Updating thread:{self.id}, {metadata}')
         if self.id is None:
             raise ValueError("Thread has not been created.")
 

@@ -3,26 +3,23 @@ from marvin.beta import Application as MarvinApplication
 from thread import Thread 
 from basemodel import ApplicationStateBaseModel
 
-class MLabApplication(MarvinApplication):
+class Application(MarvinApplication):
     state_class: Type[ApplicationStateBaseModel]
 
     def pre_run_hook(self, run):
         """Load thread metadata into state model before running the assistant."""
-        print("Assistant has started running.")
+        print("pre-run hook: Assistant has started running.")
 
         thread: Thread = Thread(
             id=run.thread.id,
         ).load()
+        print("pre-run hook: loaded thread:", thread)
 
-        if isinstance(thread.metadata, dict) and len(thread.metadata) > 1:
-            thread_metadata = thread.metadata
-        else:
-            thread_metadata = None
-        print("thread_metadata", thread_metadata)
+        thread_metadata = thread.metadata
 
         if not issubclass(self.state_class, ApplicationStateBaseModel):
             raise ValueError(
-                "default_state_factory must be a subclass of AIApplicationStateBaseModel"
+                "state_class must be a subclass of ApplicationStateBaseModel"
             )
 
         if self.state_class and thread_metadata is not None:
@@ -32,22 +29,21 @@ class MLabApplication(MarvinApplication):
 
         else:
             print(
-                "No state model provided or state metadata is empty. Creating new state instance."
+                "pre-run hook: No state model provided or state metadata is empty. Creating new state instance."
             )
-            self.state.value = self.default_state_factory()
+            self.state.value = self.state_class()
 
-        print("STATE AFTER PRE RUN", self.state)
+        print("pre-run hook: STATE ", self.state)
 
     def post_run_hook(self, run, tool_calls, tool_outputs):
         """ Save state model to thread metadata after running the assistant."""
-        print(f"Assistant {self.name} has finished running.")
-        print(f"State: {self.state}")
+        print("post_run_hook: Assistant has finished running.")
+        print(f"post_run_hook: State: {self.state}")
         self.state.flush_changes()
 
-        # update default thread metadata with self.state.value
         thread: Thread = Thread(
             id=run.thread.id,
         )
         thread.metadata = self.state.value.serialize_model()
         thread.update()
-        print("DEFAULT THREAD METADATA STATE AFTER RUN", thread.metadata)
+        print("post_run_hook: updated thread", thread)

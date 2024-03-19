@@ -9,8 +9,6 @@ class ApplicationStateBaseModel(BaseModel):
 
     @classmethod
     def deserialize_model(cls, data: Dict[str, str]) -> "ApplicationStateBaseModel":
-        print(cls)
-        print(data)
         return ApplicationStateSerializationUtils.deserialize_model(
             model=cls, data=data
         )
