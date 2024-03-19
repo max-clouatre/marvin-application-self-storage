@@ -39,7 +39,9 @@ class State(ApplicationStateBaseModel):
 
 # step 3: Define the application
 todo_app = Application(
-    name="ToDo App", instructions="A todo application. Update the list of todos with simple tasks. Carefully manipulate state.", state_class=State
+    name="ToDo App",
+    instructions="A todo application. Update the list of todos with simple tasks. Carefully manipulate state.",
+    state_class=State
 )
 
 # step 4: Interact with the application
